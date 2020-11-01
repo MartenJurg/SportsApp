@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SportsApp</string>
+    <string name="app_name">Fast4</string>
     <string name="title_activity_maps">Map</string>
     <string name="stats_distance_default_text">0.0 m</string>
     <string name="add_wp">Add WP</string>

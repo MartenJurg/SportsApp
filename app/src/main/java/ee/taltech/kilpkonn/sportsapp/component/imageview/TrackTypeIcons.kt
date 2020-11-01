@@ -5,13 +5,13 @@ import ee.taltech.kilpkonn.sportsapp.track.TrackType
 
 class TrackTypeIcons {
     companion object {
-        const val UNKNOWN = "Activity"
-        const val RUNNING = "Running"
-        const val CYCLING = "Cycling"
-        const val SKIING = "Skiing"
-        const val SOCCER = "Soccer"
-        const val ROWING = "Rowing"
-        const val SWIMMING = "Swimming"
+        const val UNKNOWN = "Casual drive"
+        const val RUNNING = "Taxi"
+        const val CYCLING = "Truck simulator"
+        const val SKIING = "Bus"
+        const val SOCCER = "Bike"
+        const val ROWING = "Race mode"
+        const val SWIMMING = "GTA"
 
         val OPTIONS = arrayOf(
             UNKNOWN, RUNNING, CYCLING, SKIING, SOCCER, ROWING, SWIMMING

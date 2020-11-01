@@ -68,6 +68,7 @@ import ee.taltech.kilpkonn.sportsapp.util.filter.SimpleFilter
 import java.lang.Math.toDegrees
 import kotlin.math.min
 import kotlin.math.pow
+import kotlin.math.roundToInt
 
 
 class MapsActivity : AppCompatActivity(), SensorEventListener, OnMapReadyCallback {
@@ -141,6 +142,8 @@ class MapsActivity : AppCompatActivity(), SensorEventListener, OnMapReadyCallbac
     private var lastAccelerometerSet = false
     private var lastMagnetometerSet = false
 
+    private var lastCountDownStart = 0L;
+
     private lateinit var sensorManager: SensorManager
     private lateinit var accelerometer: Sensor
     private lateinit var magnetometer: Sensor
@@ -166,6 +169,8 @@ class MapsActivity : AppCompatActivity(), SensorEventListener, OnMapReadyCallbac
     private lateinit var textViewDistanceLastWP: TextView
     private lateinit var textViewDriftLastWP: TextView
     private lateinit var textViewAverageSpeedLastWP: TextView
+
+    private lateinit var textViewCountDown: TextView
 
     private lateinit var imageVieWCompass: TextView
     private lateinit var spinnerDisplayMode: Spinner
@@ -237,6 +242,8 @@ class MapsActivity : AppCompatActivity(), SensorEventListener, OnMapReadyCallbac
         textViewDistanceLastWP = findViewById(R.id.distance_wp)
         textViewDriftLastWP = findViewById(R.id.drift_wp)
         textViewAverageSpeedLastWP = findViewById(R.id.avg_speed_wp)
+
+        textViewCountDown = findViewById(R.id.countdown)
 
         imageVieWCompass = findViewById(R.id.compass)
         spinnerDisplayMode = findViewById(R.id.spinner_display_mode)
@@ -496,6 +503,7 @@ class MapsActivity : AppCompatActivity(), SensorEventListener, OnMapReadyCallbac
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor === accelerometer) {
             lowPass(event.values, lastAccelerometer)
+            onAcceleration(event.values)
             lastAccelerometerSet = true
         } else if (event.sensor === magnetometer) {
             lowPass(event.values, lastMagnetometer)
@@ -532,6 +540,28 @@ class MapsActivity : AppCompatActivity(), SensorEventListener, OnMapReadyCallbac
         val alpha = 0.05f
         for (i in input.indices) {
             output[i] = output[i] + alpha * (input[i] - output[i])
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun onAcceleration(floatArray: FloatArray) {
+        val time = System.currentTimeMillis()
+        if (floatArray.max()?: 0.0f > 15.0f) {
+            lastCountDownStart = time
+        }
+
+        if (time - lastCountDownStart < 2 * 1_000) {
+            textViewCountDown.text = "%.1f".format(7.0 - (time - lastCountDownStart) / 1000.0)
+            textViewCountDown.visibility = View.VISIBLE
+            textViewCountDown.setBackgroundColor(0xFFEE0000.toInt())
+        } else if (time - lastCountDownStart < 7 * 1_000) {
+            textViewCountDown.setBackgroundColor(0xFF35830C.toInt())
+            textViewCountDown.text = "%.1f".format(7.0 - (time - lastCountDownStart) / 1000.0)
+            textViewCountDown.visibility = View.VISIBLE
+        } else if (time - lastCountDownStart < 9 * 1_000) {
+            textViewCountDown.text = "GO"
+        } else {
+            textViewCountDown.visibility = View.INVISIBLE
         }
     }
 
